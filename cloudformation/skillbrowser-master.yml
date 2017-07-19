@@ -1,0 +1,38 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Master AWS CloudFormation Template for Skillbrowser
+
+Parameters:
+  Region:
+    Description: The AWS region this is running in
+    Type: String
+    Default: eu-central-1
+
+  TemplateBucketName:
+    Type: String
+    Description: The name for the bucket hosting project templates
+    Default: skillbrowser-template-s3
+
+  LambdaBucketName:
+    Type: String
+    Description: The name for the bucket hosting project lambda
+    Default: skillbrowser-lambda-s3
+
+Resources:
+  TemplateBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Ref TemplateBucketName
+
+  LambdaBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Ref LambdaBucketName
+
+Outputs:
+  TemplateBucket:
+   Value: !GetAtt [TemplateBucket, Arn]
+
+  LambdaBucket:
+    Value: !GetAtt [LambdaBucket, Arn]
