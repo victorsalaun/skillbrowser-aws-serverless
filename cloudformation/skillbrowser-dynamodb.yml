@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: AWS CloudFormation Template for Skillbrower DynamoDB
+
+Parameters:
+  ClientDynamoDBTableName:
+   Description: DynamoDB table name for the Client table
+   Type: String
+   Default: Client
+
+  EmployeeDynamoDBTableName:
+   Description: DynamoDB table name for the Employee table
+   Type: String
+   Default: Employee
+
+  MissionDynamoDBTableName:
+   Description: DynamoDB table name for the Mission table
+   Type: String
+   Default: Mission
+
+  SkillDynamoDBTableName:
+   Description: DynamoDB table name for the Skill table
+   Type: String
+   Default: Skill
+
+Resources:
+  ClientDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: id
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: !Ref ClientDynamoDBTableName
+
+  EmployeeDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: id
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: !Ref EmployeeDynamoDBTableName
+
+  MissionDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: id
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: !Ref MissionDynamoDBTableName
+
+  SkillDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: id
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: !Ref SkillDynamoDBTableName
+
+Outputs:
+  ClientDynamoDBTable:
+    Value: !Ref ClientDynamoDBTable
+
+  EmployeeDynamoDBTable:
+    Value: !Ref EmployeeDynamoDBTable
+
+  MissionDynamoDBTable:
+    Value: !Ref MissionDynamoDBTable
+
+  SkillDynamoDBTable:
+    Value: !Ref SkillDynamoDBTable
