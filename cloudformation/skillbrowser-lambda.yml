@@ -1,0 +1,655 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: AWS CloudFormation Template for Skillbrowser AWS Lambda
+
+Parameters:
+  LambdaCodeBucketName:
+    Description: S3 Bucket containing Lambda deployment packages
+    Type: String
+
+  ClientDynamoDBTableName:
+     Description: DynamoDB table name for the Client table
+     Type: String
+
+  EmployeeDynamoDBTableName:
+     Description: DynamoDB table name for the Employee table
+     Type: String
+
+  MissionDynamoDBTableName:
+     Description: DynamoDB table name for the Mission table
+     Type: String
+
+  SkillDynamoDBTableName:
+     Description: DynamoDB table name for the Skill table
+     Type: String
+
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+
+  LambdaPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: LambdaFunctionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - logs:*
+          Resource:
+          - arn:aws:logs:*:*:*
+        - Effect: Allow
+          Action:
+          - logs:*
+          Resource:
+          - '*'
+
+# #######
+# Client
+# #######
+  CreateClientFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CreateClientFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:PutItem"
+          Resource: !Ref ClientDynamoDBTableName
+
+  CreateClientFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - CreateClientFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that create Client
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: createClientFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  ReadClientFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ReadClientFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:GetItem"
+          - "dynamodb:Scan"
+          Resource: !Ref ClientDynamoDBTableName
+
+  ReadClientFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - ReadClientFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that scan Client
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: readClientFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  UpdateClientFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: UpdateClientFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:UpdateItem"
+          Resource: !Ref ClientDynamoDBTableName
+
+  UpdateClientFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - UpdateClientFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that update Client
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: updateClientFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  DeleteClientFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DeleteClientFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:DeleteItem"
+          Resource: !Ref ClientDynamoDBTableName
+
+  DeleteClientFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - DeleteClientFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that delete Client
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: deleteClientFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+# #########
+# Employee
+# #########
+  CreateEmployeeFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CreateEmployeeFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:PutItem"
+          Resource: !Ref EmployeeDynamoDBTableName
+
+  CreateEmployeeFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - CreateEmployeeFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that create Employee
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: createEmployeeFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  ReadEmployeeFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ReadEmployeeFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:GetItem"
+          - "dynamodb:Scan"
+          Resource: !Ref EmployeeDynamoDBTableName
+
+  ReadEmployeeFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - ReadEmployeeFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that scan Employee
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: readEmployeeFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  UpdateEmployeeFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: UpdateEmployeeFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:UpdateItem"
+          Resource: !Ref EmployeeDynamoDBTableName
+
+  UpdateEmployeeFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - UpdateEmployeeFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that update Employee
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: updateEmployeeFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  DeleteEmployeeFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DeleteEmployeeFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:DeleteItem"
+          Resource: !Ref EmployeeDynamoDBTableName
+
+  DeleteEmployeeFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - DeleteEmployeeFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that delete Employee
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: deleteEmployeeFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+# ########
+# Mission
+# ########
+  CreateMissionFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CreateMissionFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:PutItem"
+          Resource: !Ref MissionDynamoDBTableName
+
+  CreateMissionFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - CreateMissionFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that create Mission
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: createMissionFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  ReadMissionFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ReadMissionFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:GetItem"
+          - "dynamodb:Scan"
+          Resource: !Ref MissionDynamoDBTableName
+
+  ReadMissionFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - ReadMissionFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that scan Mission
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: readMissionFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  UpdateMissionFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: UpdateMissionFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:UpdateItem"
+          Resource: !Ref MissionDynamoDBTableName
+
+  UpdateMissionFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - UpdateMissionFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that update Mission
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: updateMissionFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  DeleteMissionFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DeleteMissionFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:DeleteItem"
+          Resource: !Ref MissionDynamoDBTableName
+
+  DeleteMissionFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - DeleteEmployeeFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that delete Mission
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: deleteMissionFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+# ######
+# Skill
+# ######
+  CreateSkillFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CreateSkillFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:PutItem"
+          Resource: !Ref SkillDynamoDBTableName
+
+  CreateSkillFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - CreateSkillFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that create Skill
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: createSkillFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  ReadSkillFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ReadSkillFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:GetItem"
+          - "dynamodb:Scan"
+          Resource: !Ref SkillDynamoDBTableName
+
+  ReadSkillFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - ReadSkillFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that scan Skill
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: readSkillFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  UpdateSkillFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: UpdateSkillFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:UpdateItem"
+          Resource: !Ref SkillDynamoDBTableName
+
+  UpdateSkillFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - UpdateSkillFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that update Skill
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: updateSkillFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+  DeleteSkillFunctionExecutionPolicy:
+    DependsOn:
+    - LambdaRole
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: DeleteSkillFunctionExecutionPolicy
+      Roles:
+      - !Ref 'LambdaRole'
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Action:
+          - "dynamodb:DeleteItem"
+          Resource: !Ref SkillDynamoDBTableName
+
+  DeleteSkillFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    - LambdaPolicy
+    - DeleteSkillFunctionExecutionPolicy
+    Properties:
+      Handler: index.lambda_handler
+      Role: !GetAtt [LambdaRole, Arn]
+      Description: A lambda function that delete Skill
+      Code:
+        S3Bucket: !Ref 'LambdaCodeBucketName'
+        S3Key: deleteSkillFunction.zip
+      Runtime: python3.6
+      MemorySize: '128'
+      Timeout: '20'
+
+Outputs:
+  CreateClientFunction:
+    Value: !GetAtt [CreateClientFunction, Arn]
+
+  ReadClientFunction:
+    Value: !GetAtt [ReadClientFunction, Arn]
+
+  UpdateClientFunction:
+    Value: !GetAtt [UpdateClientFunction, Arn]
+
+  DeleteClientFunction:
+    Value: !GetAtt [DeleteClientFunction, Arn]
+
+  CreateEmployeeFunction:
+    Value: !GetAtt [CreateEmployeeFunction, Arn]
+
+  ReadEmployeeFunction:
+    Value: !GetAtt [ReadEmployeeFunction, Arn]
+
+  UpdateEmployeeFunction:
+    Value: !GetAtt [UpdateEmployeeFunction, Arn]
+
+  DeleteEmployeeFunction:
+    Value: !GetAtt [DeleteEmployeeFunction, Arn]
+
+  CreateMissionFunction:
+    Value: !GetAtt [CreateMissionFunction, Arn]
+
+  ReadMissionFunction:
+    Value: !GetAtt [ReadMissionFunction, Arn]
+
+  UpdateMissionFunction:
+    Value: !GetAtt [UpdateMissionFunction, Arn]
+
+  DeleteMissionFunction:
+    Value: !GetAtt [DeleteMissionFunction, Arn]
+
+  CreateSkillFunction:
+    Value: !GetAtt [CreateSkillFunction, Arn]
+
+  ReadSkillFunction:
+    Value: !GetAtt [ReadSkillFunction, Arn]
+
+  UpdateSkillFunction:
+    Value: !GetAtt [UpdateSkillFunction, Arn]
+
+  DeleteSkillFunction:
+    Value: !GetAtt [DeleteSkillFunction, Arn]
