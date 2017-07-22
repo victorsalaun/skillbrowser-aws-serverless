@@ -1,0 +1,66 @@
+[
+  {
+    "ParameterKey": "CreateClientFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ReadClientFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "UpdateClientFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "DeleteClientFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "CreateEmployeeFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ReadEmployeeFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "UpdateEmployeeFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "DeleteEmployeeFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "CreateMissionFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ReadMissionFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "UpdateMissionFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "DeleteMissionFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "CreateSkillFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ReadSkillFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "UpdateSkillFunctionName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "DeleteSkillFunctionName",
+    "ParameterValue": ""
+  }
+]

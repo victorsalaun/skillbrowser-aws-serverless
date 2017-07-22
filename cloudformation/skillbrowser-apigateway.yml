@@ -1,0 +1,1174 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: AWS CloudFormation Template for Skillbrowser API Gateway
+
+Parameters:
+  Region:
+    Description: The AWS region this is running in
+    Type: String
+    Default: eu-central-1
+
+  CreateClientFunctionName:
+    Type: String
+
+  ReadClientFunctionName:
+    Type: String
+
+  UpdateClientFunctionName:
+    Type: String
+
+  DeleteClientFunctionName:
+    Type: String
+
+  CreateEmployeeFunctionName:
+    Type: String
+
+  ReadEmployeeFunctionName:
+    Type: String
+
+  UpdateEmployeeFunctionName:
+    Type: String
+
+  DeleteEmployeeFunctionName:
+    Type: String
+
+  CreateMissionFunctionName:
+    Type: String
+
+  ReadMissionFunctionName:
+    Type: String
+
+  UpdateMissionFunctionName:
+    Type: String
+
+  DeleteMissionFunctionName:
+    Type: String
+
+  CreateSkillFunctionName:
+    Type: String
+
+  ReadSkillFunctionName:
+    Type: String
+
+  UpdateSkillFunctionName:
+    Type: String
+
+  DeleteSkillFunctionName:
+    Type: String
+
+Resources:
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: skillbrowser-api
+      Body:
+        swagger: "2.0"
+        info:
+          version: "2017-06-11T21:05:28Z"
+          title: "skillbrowser-api"
+        schemes:
+          - "https"
+        paths:
+          /client/{id}:
+            delete:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "client": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteClientFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Client"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "client": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadClientFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,OPTIONS,PUT'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+            put:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "client"
+                  in: body
+                  description: Update Client details
+                  schema:
+                    $ref: '#/definitions/Client'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "client": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateClientFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+          /client:
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Clients"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: "{}"
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadClientFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            post:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: client
+                  in: body
+                  description: Update Client details
+                  schema:
+                    $ref: '#/definitions/Client'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "client": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateClientFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+          /employee/{id}:
+            delete:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "employee": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteEmployeeFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Employee"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "employee": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadEmployeeFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,OPTIONS,PUT'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+            put:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "employee"
+                  in: body
+                  description: Update Employee details
+                  schema:
+                    $ref: '#/definitions/Employee'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "employee": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateEmployeeFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+          /employee:
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Employees"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: "{}"
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadEmployeeFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            post:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: employee
+                  in: body
+                  description: Update Employee details
+                  schema:
+                    $ref: '#/definitions/Employee'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "employee": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateEmployeeFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+          /mission/{id}:
+            delete:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "mission": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteMissionFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Mission"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "mission": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadMissionFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,OPTIONS,PUT'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+            put:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "mission"
+                  in: body
+                  description: Update Mission details
+                  schema:
+                    $ref: '#/definitions/Mission'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "mission": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateMissionFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+          /mission:
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Missions"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: "{}"
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadMissionFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            post:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: mission
+                  in: body
+                  description: Update Mission details
+                  schema:
+                    $ref: '#/definitions/Mission'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "mission": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateMissionFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+          /skill/{id}:
+            delete:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "skill": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteSkillFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "id"
+                  in: "param"
+                  required: true
+                  type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Skill"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "skill": {
+                        "id": "$input.params('id')"
+                      }
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadSkillFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,OPTIONS,PUT'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+            put:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: "skill"
+                  in: body
+                  description: Update Skill details
+                  schema:
+                    $ref: '#/definitions/Skill'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "skill": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateSkillFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+          /skill:
+            get:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Skills"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: "{}"
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadSkillFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            post:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              parameters:
+                - name: skill
+                  in: body
+                  description: Update Skill details
+                  schema:
+                    $ref: '#/definitions/Skill'
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: |
+                    {
+                      "skill": $input.json('$')
+                    }
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: !Join [ "", [ "arn:aws:apigateway:", !Ref "AWS::Region",  ":lambda:path/2015-03-31/functions/arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateSkillFunctionName", "/invocations" ] ]
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            options:
+              consumes:
+                - "application/json"
+              produces:
+                - "application/json"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+        definitions:
+          Empty:
+            type: object
+            title: Empty Schema
+          Client:
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+          Clients:
+            type: array
+            items:
+              $ref: Client
+          Employee:
+            properties:
+              id:
+                type: string
+              firstname:
+                type: string
+              lastname:
+                type: string
+          Employees:
+            type: array
+            items:
+              $ref: Employee
+          Mission:
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+          Missions:
+            type: array
+            items:
+              $ref: Mission
+          Skill:
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+          Skills:
+            type: array
+            items:
+              $ref: Skill
+
+  CreateClientFunctionNamePerms:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - ApiGatewayRestApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateClientFunctionName" ] ]
+      Principal: apigateway.amazonaws.com
+
+  ReadClientFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadClientFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  UpdateClientFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateClientFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  DeleteClientFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteClientFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  CreateEmployeeFunctionNamePerms:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - ApiGatewayRestApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateEmployeeFunctionName" ] ]
+      Principal: apigateway.amazonaws.com
+
+  ReadEmployeeFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadEmployeeFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  UpdateEmployeeFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateEmployeeFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  DeleteEmployeeFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteEmployeeFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  CreateMissionFunctionNamePerms:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - ApiGatewayRestApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateMissionFunctionName" ] ]
+      Principal: apigateway.amazonaws.com
+
+  ReadMissionFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadMissionFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  UpdateMissionFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateMissionFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  DeleteMissionFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteMissionFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  CreateSkillFunctionNamePerms:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - ApiGatewayRestApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "CreateSkillFunctionName" ] ]
+      Principal: apigateway.amazonaws.com
+
+  ReadSkillFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "ReadSkillFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  UpdateSkillFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "UpdateSkillFunctionName" ] ]
+        Principal: apigateway.amazonaws.com
+
+  DeleteSkillFunctionNamePerms:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Join [ "", [ "arn:aws:lambda:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":function:", !Ref "DeleteSkillFunctionName" ] ]
+        Principal: apigateway.amazonaws.com

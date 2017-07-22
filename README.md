@@ -55,3 +55,18 @@ Fill skillbrowser-lambda.parameters.json with Master outputs and DynamoDB output
     
     cd cloudformation
     aws cloudformation create-stack --template-body file://skillbrowser-lambda.yml --parameters file://skillbrowser-lambda.parameters.json --stack-name skillbrowser-lambda --capabilities CAPABILITY_IAM --region eu-central-1
+
+Outputs :
+
+    aws cloudformation describe-stacks --stack-name skillbrowser-lambda --region eu-central-1
+
+### API Gateway
+
+Deploy :
+
+    aws cloudformation create-stack --template-body file://skillbrowser-apigateway.yml --parameters file://skillbrowser-apigateway.parameters.json --stack-name skillbrowser-apigateway --region eu-central-1
+
+Outputs :
+
+    aws cloudformation describe-stacks --stack-name skillbrowser-apigateway --region eu-central-1
+    
