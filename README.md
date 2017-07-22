@@ -69,4 +69,7 @@ Deploy :
 Outputs :
 
     aws cloudformation describe-stacks --stack-name skillbrowser-apigateway --region eu-central-1
-    
+
+Deployment to a stage :
+
+    aws apigateway create-deployment --rest-api-id REST_API_ID --stage-name "dev" --region eu-central-1
