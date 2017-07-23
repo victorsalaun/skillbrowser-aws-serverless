@@ -89,4 +89,23 @@ Deploy static :
 
     cd static
     npm run build
-    aws s3 cp dist s3://skillbrowser-static-s3 --recursive  --region eu-central-1
+    aws s3 cp dist s3://skillbrowser-static-s3 --recursive --region eu-central-1
+
+## Clean
+
+    // Static
+    aws s3 rm s3://skillbrowser-static-s3 --recursive --region eu-central-1
+    aws cloudformation delete-stack --stack-name skillbrowser-static --region eu-central-1
+    
+    // API Gateway
+    aws cloudformation delete-stack --stack-name skillbrowser-apigateway --region eu-central-1
+    
+    // Lambda
+    aws s3 rm s3://skillbrowser-lambda-s3 --recursive --region eu-central-1
+    aws cloudformation delete-stack --stack-name skillbrowser-lambda --region eu-central-1
+    
+    // DynamoDB
+    aws cloudformation delete-stack --stack-name skillbrowser-dynamodb --region eu-central-1
+    
+    // Master
+    aws cloudformation delete-stack --stack-name skillbrowser-master --region eu-central-1
