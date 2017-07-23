@@ -73,3 +73,20 @@ Outputs :
 Deployment to a stage :
 
     aws apigateway create-deployment --rest-api-id REST_API_ID --stage-name "dev" --region eu-central-1
+
+### Static
+
+Deploy :
+
+    cd cloudformation
+    aws cloudformation create-stack --template-body file://skillbrowser-static.yml --parameters file://skillbrowser-static.parameters.json --stack-name skillbrowser-static --region eu-central-1
+
+Outputs :
+
+    aws cloudformation describe-stacks --stack-name skillbrowser-static --region eu-central-1
+    
+Deploy static :
+
+    cd static
+    npm run build
+    aws s3 cp dist s3://skillbrowser-static-s3 --recursive  --region eu-central-1
