@@ -4,11 +4,6 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: AWS CloudFormation Template for Skillbrowser API Gateway
 
 Parameters:
-  Region:
-    Description: The AWS region this is running in
-    Type: String
-    Default: eu-central-1
-
   CreateClientFunctionName:
     Type: String
 

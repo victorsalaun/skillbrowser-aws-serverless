@@ -9,20 +9,24 @@ Parameters:
     Type: String
 
   ClientDynamoDBTableName:
-     Description: DynamoDB table name for the Client table
-     Type: String
+   Description: DynamoDB table name for the Client table
+   Type: String
+   Default: Client
 
   EmployeeDynamoDBTableName:
-     Description: DynamoDB table name for the Employee table
-     Type: String
+   Description: DynamoDB table name for the Employee table
+   Type: String
+   Default: Employee
 
   MissionDynamoDBTableName:
-     Description: DynamoDB table name for the Mission table
-     Type: String
+   Description: DynamoDB table name for the Mission table
+   Type: String
+   Default: Mission
 
   SkillDynamoDBTableName:
-     Description: DynamoDB table name for the Skill table
-     Type: String
+   Description: DynamoDB table name for the Skill table
+   Type: String
+   Default: Skill
 
 Resources:
   LambdaRole:
@@ -78,7 +82,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:PutItem"
-          Resource: !Ref ClientDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref ClientDynamoDBTableName ] ]
 
   CreateClientFunction:
     Type: AWS::Lambda::Function
@@ -112,7 +116,7 @@ Resources:
           Action:
           - "dynamodb:GetItem"
           - "dynamodb:Scan"
-          Resource: !Ref ClientDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref ClientDynamoDBTableName ] ]
 
   ReadClientFunction:
     Type: AWS::Lambda::Function
@@ -145,7 +149,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:UpdateItem"
-          Resource: !Ref ClientDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref ClientDynamoDBTableName ] ]
 
   UpdateClientFunction:
     Type: AWS::Lambda::Function
@@ -178,7 +182,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:DeleteItem"
-          Resource: !Ref ClientDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref ClientDynamoDBTableName ] ]
 
   DeleteClientFunction:
     Type: AWS::Lambda::Function
@@ -214,7 +218,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:PutItem"
-          Resource: !Ref EmployeeDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref EmployeeDynamoDBTableName ] ]
 
   CreateEmployeeFunction:
     Type: AWS::Lambda::Function
@@ -248,7 +252,7 @@ Resources:
           Action:
           - "dynamodb:GetItem"
           - "dynamodb:Scan"
-          Resource: !Ref EmployeeDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref EmployeeDynamoDBTableName ] ]
 
   ReadEmployeeFunction:
     Type: AWS::Lambda::Function
@@ -281,7 +285,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:UpdateItem"
-          Resource: !Ref EmployeeDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref EmployeeDynamoDBTableName ] ]
 
   UpdateEmployeeFunction:
     Type: AWS::Lambda::Function
@@ -314,7 +318,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:DeleteItem"
-          Resource: !Ref EmployeeDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref EmployeeDynamoDBTableName ] ]
 
   DeleteEmployeeFunction:
     Type: AWS::Lambda::Function
@@ -350,7 +354,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:PutItem"
-          Resource: !Ref MissionDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref MissionDynamoDBTableName ] ]
 
   CreateMissionFunction:
     Type: AWS::Lambda::Function
@@ -384,7 +388,7 @@ Resources:
           Action:
           - "dynamodb:GetItem"
           - "dynamodb:Scan"
-          Resource: !Ref MissionDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref MissionDynamoDBTableName ] ]
 
   ReadMissionFunction:
     Type: AWS::Lambda::Function
@@ -417,7 +421,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:UpdateItem"
-          Resource: !Ref MissionDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref MissionDynamoDBTableName ] ]
 
   UpdateMissionFunction:
     Type: AWS::Lambda::Function
@@ -450,7 +454,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:DeleteItem"
-          Resource: !Ref MissionDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref MissionDynamoDBTableName ] ]
 
   DeleteMissionFunction:
     Type: AWS::Lambda::Function
@@ -486,7 +490,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:PutItem"
-          Resource: !Ref SkillDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref SkillDynamoDBTableName ] ]
 
   CreateSkillFunction:
     Type: AWS::Lambda::Function
@@ -520,7 +524,7 @@ Resources:
           Action:
           - "dynamodb:GetItem"
           - "dynamodb:Scan"
-          Resource: !Ref SkillDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref SkillDynamoDBTableName ] ]
 
   ReadSkillFunction:
     Type: AWS::Lambda::Function
@@ -553,7 +557,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:UpdateItem"
-          Resource: !Ref SkillDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref SkillDynamoDBTableName ] ]
 
   UpdateSkillFunction:
     Type: AWS::Lambda::Function
@@ -586,7 +590,7 @@ Resources:
         - Effect: Allow
           Action:
           - "dynamodb:DeleteItem"
-          Resource: !Ref SkillDynamoDBTableName
+          Resource: !Join [ "", [ "arn:aws:dynamodb:", !Ref "AWS::Region", ":", !Ref "AWS::AccountId", ":table/", !Ref SkillDynamoDBTableName ] ]
 
   DeleteSkillFunction:
     Type: AWS::Lambda::Function

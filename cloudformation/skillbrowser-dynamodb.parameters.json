@@ -1,9 +1,5 @@
 [
   {
-    "ParameterKey": "LambdaCodeBucketName",
-    "ParameterValue": "skillbrowser-lambda-s3"
-  },
-  {
     "ParameterKey": "ClientDynamoDBTableName",
     "ParameterValue": "Client"
   },

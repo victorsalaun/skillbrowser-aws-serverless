@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "LambdaBucketName",
+    "ParameterValue": "skillbrowser-lambda-s3"
+  },
+  {
+    "ParameterKey": "TemplateBucketName",
+    "ParameterValue": "skillbrowser-template-s3"
+  }
+]

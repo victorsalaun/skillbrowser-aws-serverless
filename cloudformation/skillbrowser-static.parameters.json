@@ -1,6 +1,6 @@
 [
   {
     "ParameterKey": "BucketName",
-    "ParameterValue": "skillbrowser-static-test-s3"
+    "ParameterValue": "skillbrowser-static-s3"
   }
 ]

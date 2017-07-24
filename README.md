@@ -9,31 +9,31 @@
 
 ### Master
 
-Deploy :
+Create Stack
 
-    cd cloudformation
-    aws cloudformation deploy --template-file skillbrowser-master.yml --stack-name skillbrowser-master --region eu-central-1
+    ~ cloudformation
+    aws cloudformation create-stack --stack-name skillbrowser-master --template-body file://skillbrowser-master.yml
 
-Outputs :
+Stack Outputs
 
-    aws cloudformation describe-stacks --stack-name skillbrowser-master --region eu-central-1
+    aws cloudformation describe-stacks --stack-name skillbrowser-master
 
 ### DynamoDB
 
-Deploy :
+Create Stack
 
-    cd cloudformation
-    aws cloudformation deploy --template-file skillbrowser-dynamodb.yml --stack-name skillbrowser-dynamodb --region eu-central-1
+    ~ cloudformation
+    aws cloudformation create-stack --stack-name skillbrowser-dynamodb --template-body file://skillbrowser-dynamodb.yml --parameters file://skillbrowser-dynamodb.parameters.json
 
-Outputs :
+Stack Outputs
 
-    aws cloudformation describe-stacks --stack-name skillbrowser-dynamodb --region eu-central-1
+    aws cloudformation describe-stacks --stack-name skillbrowser-dynamodb
 
 ### Lambda
 
-Zip :
+Zip
 
-    cd lambda
+    ~ lambda
     
     // For Windows use PowerShell
     zip.ps1
@@ -41,71 +41,82 @@ Zip :
     // For Unix
     zip.sh
 
-Deploy :
+Create Stack
 
-Fill skillbrowser-lambda.parameters.json with Master outputs and DynamoDB outputs
-
-    cd lambda
+    ~ lambda
         
     // For Windows use PowerShell
-    deploy.ps1
+        // Set lambdas3 variable inside deploy.ps1 script
+        deploy.ps1
         
     // For Unix
-    deploy.sh
+        // Set lambdas3 variable inside deploy.sh script
+        deploy.sh
     
-    cd cloudformation
-    aws cloudformation create-stack --template-body file://skillbrowser-lambda.yml --parameters file://skillbrowser-lambda.parameters.json --stack-name skillbrowser-lambda --capabilities CAPABILITY_IAM --region eu-central-1
+    // Check, modify LAMBDA-S3
+    aws s3 ls s3://LAMBDA-S3
+    
+Fill skillbrowser-lambda.parameters.json with Master outputs and DynamoDB outputs
 
-Outputs :
+    ~ cloudformation
+    aws cloudformation create-stack --stack-name skillbrowser-lambda --template-body file://skillbrowser-lambda.yml --parameters file://skillbrowser-lambda.parameters.json --capabilities CAPABILITY_IAM
 
-    aws cloudformation describe-stacks --stack-name skillbrowser-lambda --region eu-central-1
+Stack Outputs
+
+    aws cloudformation describe-stacks --stack-name skillbrowser-lambda
 
 ### API Gateway
 
-Deploy :
+Create Stack
 
-    aws cloudformation create-stack --template-body file://skillbrowser-apigateway.yml --parameters file://skillbrowser-apigateway.parameters.json --stack-name skillbrowser-apigateway --region eu-central-1
+Fill skillbrowser-apigateway.parameters.json with Lambda outputs
 
-Outputs :
+    aws cloudformation create-stack --stack-name skillbrowser-apigateway --template-body file://skillbrowser-apigateway.yml --parameters file://skillbrowser-apigateway.parameters.json
 
-    aws cloudformation describe-stacks --stack-name skillbrowser-apigateway --region eu-central-1
+Stack Outputs
 
-Deployment to a stage :
+    aws cloudformation describe-stacks --stack-name skillbrowser-apigateway
 
-    aws apigateway create-deployment --rest-api-id REST_API_ID --stage-name "dev" --region eu-central-1
+Deployment to a stage
+
+    // Get API id
+    aws apigateway get-rest-apis
+    
+    // Replace REST_API_ID with the skillbrower api newly created
+    aws apigateway create-deployment --rest-api-id REST_API_ID --stage-name "dev"
 
 ### Static
 
-Deploy :
+Create Stack
 
-    cd cloudformation
-    aws cloudformation create-stack --template-body file://skillbrowser-static.yml --parameters file://skillbrowser-static.parameters.json --stack-name skillbrowser-static --region eu-central-1
+    ~ cloudformation
+    aws cloudformation create-stack --stack-name skillbrowser-static --template-body file://skillbrowser-static.yml --parameters file://skillbrowser-static.parameters.json
 
-Outputs :
+Stack Outputs
 
-    aws cloudformation describe-stacks --stack-name skillbrowser-static --region eu-central-1
+    aws cloudformation describe-stacks --stack-name skillbrowser-static
     
-Deploy static :
+Deploy static
 
-    cd static
+    ~ static
     npm run build
-    aws s3 cp dist s3://skillbrowser-static-s3 --recursive --region eu-central-1
+    aws s3 cp dist s3://skillbrowser-static-s3 --recursive
 
 ## Clean
 
     // Static
-    aws s3 rm s3://skillbrowser-static-s3 --recursive --region eu-central-1
-    aws cloudformation delete-stack --stack-name skillbrowser-static --region eu-central-1
+    aws s3 rm s3://skillbrowser-static-s3 --recursive
+    aws cloudformation delete-stack --stack-name skillbrowser-static
     
     // API Gateway
-    aws cloudformation delete-stack --stack-name skillbrowser-apigateway --region eu-central-1
+    aws cloudformation delete-stack --stack-name skillbrowser-apigateway
     
     // Lambda
-    aws s3 rm s3://skillbrowser-lambda-s3 --recursive --region eu-central-1
-    aws cloudformation delete-stack --stack-name skillbrowser-lambda --region eu-central-1
+    aws s3 rm s3://skillbrowser-lambda-s3 --recursive
+    aws cloudformation delete-stack --stack-name skillbrowser-lambda
     
     // DynamoDB
-    aws cloudformation delete-stack --stack-name skillbrowser-dynamodb --region eu-central-1
+    aws cloudformation delete-stack --stack-name skillbrowser-dynamodb
     
     // Master
-    aws cloudformation delete-stack --stack-name skillbrowser-master --region eu-central-1
+    aws cloudformation delete-stack --stack-name skillbrowser-master
